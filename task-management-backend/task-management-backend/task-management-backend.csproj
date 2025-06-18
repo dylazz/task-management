@@ -10,17 +10,15 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.6"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.6" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="9.0.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="9.0.1" />
     </ItemGroup>
 
     <ItemGroup>
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Controllers\" />
-      <Folder Include="Data\" />
     </ItemGroup>
 
 </Project>
