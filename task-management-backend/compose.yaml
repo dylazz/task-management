@@ -1,0 +1,7 @@
+﻿services:
+  task-management-backend:
+    image: task-management-backend
+    build:
+      context: .
+      dockerfile: task-management-backend/Dockerfile
+
