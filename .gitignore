@@ -5,14 +5,14 @@
 *.suo
 *.sln.docstates
 
-# Rider
+# Rider & JetBrains
 .idea/
 
 # --- Node (Frontend) ---
-frontend/node_modules/
-frontend/build/
-frontend/.env
-frontend/.eslintcache
+task-management-frontend/node_modules/
+task-management-frontend/build/
+task-management-frontend/.env
+task-management-frontend/.eslintcache
 
 # === Logs / Temp ===
 *.log
