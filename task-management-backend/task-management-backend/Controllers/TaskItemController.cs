@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using task_management_backend.Data;
-using task_management_backend.Models;
 using task_management_backend.Models.DTOs.Input;
 using task_management_backend.Models.DTOs.Output;
 using task_management_backend.Models.Services.Interfaces;
@@ -12,7 +9,7 @@ namespace task_management_backend.Controllers;
 /// Controller for Task related operations
 /// </summary>
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class TaskItemController : ControllerBase
 {
     private readonly ITaskItemService _taskItemService;
@@ -23,7 +20,7 @@ public class TaskItemController : ControllerBase
         _taskItemService = taskItemService;
         _logger = logger;
     }
-    
+
     /// <summary>
     /// Returns all TaskItems
     /// </summary>
@@ -41,11 +38,12 @@ public class TaskItemController : ControllerBase
             return StatusCode(500, e.Message);
         }
     }
-    
+
     /// <summary>
     /// Returns a TaskItem by ID
     /// </summary>
     [HttpGet("{id}")]
+    [ActionName(nameof(GetTaskItemByIdAsync))]
     public async Task<ActionResult<TaskItemResponse>> GetTaskItemByIdAsync(int id)
     {
         var taskItem = await _taskItemService.GetTaskItemByIdAsync(id);
@@ -55,7 +53,7 @@ public class TaskItemController : ControllerBase
         }
         return Ok(taskItem);
     }
-    
+
     /// <summary>
     /// Inserts / Updates a TaskItem
     /// </summary>
@@ -63,10 +61,19 @@ public class TaskItemController : ControllerBase
     public async Task<ActionResult<TaskItemResponse>> UpsertTaskAsync(TaskItemUpsert request)
     {
         var taskItem = await _taskItemService.UpsertTaskItemAsync(request);
-        if(request.Id.HasValue && taskItem == null)
+        if (request.Id.HasValue)
         {
-            return NotFound($"Task with ID {request.Id} not found");
+            if (taskItem == null)
+            {
+                return NotFound($"Task with ID {request.Id} not found");
+            }
+
+            return Ok(taskItem);
         }
-        return request.Id.HasValue ? Ok(taskItem) : CreatedAtAction(nameof(GetTaskItemByIdAsync), new {id = taskItem!.Id}, taskItem);
+        return CreatedAtAction(
+            nameof(GetTaskItemByIdAsync),
+            new { id = taskItem!.Id },
+            taskItem
+        );
     }
 }

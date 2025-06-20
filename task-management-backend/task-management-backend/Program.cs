@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using task_management_backend.Data;
+using task_management_backend.Models.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,9 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new() { Title = "Task Management API", Version = "v1" });
 });
+
+// Register TaskItemService
+builder.Services.AddScoped<ITaskItemService, TaskItemService>();
 
 // Add SQLite
 builder.Services.AddDbContext<AppDbContext>(options =>

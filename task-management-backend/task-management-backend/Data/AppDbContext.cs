@@ -17,6 +17,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<TaskItem>(entity =>
         {
             entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Title).IsRequired();
             entity.Property(e => e.Description);
             //SQLite needs string conversion for enums
