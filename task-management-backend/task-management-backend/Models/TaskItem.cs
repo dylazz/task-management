@@ -2,7 +2,7 @@
 
 namespace task_management_backend.Models;
 
-public class Task
+public class TaskItem
 {
     public int Id { get; set; }
     public string Title { get; set; }

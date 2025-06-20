@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Task = task_management_backend.Models.Task;
+using task_management_backend.Models;
 
 namespace task_management_backend.Data;
 
@@ -10,11 +10,11 @@ public class AppDbContext : DbContext
         
     }
 
-    public DbSet<Task> Tasks { get; set; }
+    public DbSet<TaskItem> TaskItems { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Task>(entity =>
+        modelBuilder.Entity<TaskItem>(entity =>
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Title).IsRequired();

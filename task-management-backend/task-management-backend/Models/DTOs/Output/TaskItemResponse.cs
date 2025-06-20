@@ -2,7 +2,7 @@
 
 namespace task_management_backend.Models.DTOs.Output;
 
-public record TaskResponse
+public record TaskItemResponse
 (
     int Id,
     string Title,

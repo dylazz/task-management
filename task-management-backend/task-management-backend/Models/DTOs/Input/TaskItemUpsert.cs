@@ -2,7 +2,7 @@
 
 namespace task_management_backend.Models.DTOs.Input;
 
-public record TaskUpsert
+public record TaskItemUpsert
 (
     int? Id,
     string Title,
