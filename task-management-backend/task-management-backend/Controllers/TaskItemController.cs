@@ -25,6 +25,8 @@ public class TaskItemController : ControllerBase
     /// Returns all TaskItems
     /// </summary>
     [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<TaskItemResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<IEnumerable<TaskItemResponse>>> GetAllTaskItemsAsync()
     {
         try
@@ -35,7 +37,7 @@ public class TaskItemController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Error retrieving tasks");
-            return StatusCode(500, e.Message);
+            return Problem("An error occurred while retrieving tasks", statusCode: StatusCodes.Status500InternalServerError);
         }
     }
 
@@ -44,6 +46,8 @@ public class TaskItemController : ControllerBase
     /// </summary>
     [HttpGet("{id}")]
     [ActionName(nameof(GetTaskItemByIdAsync))]
+    [ProducesResponseType(typeof(TaskItemResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TaskItemResponse>> GetTaskItemByIdAsync(int id)
     {
         var taskItem = await _taskItemService.GetTaskItemByIdAsync(id);
@@ -58,8 +62,16 @@ public class TaskItemController : ControllerBase
     /// Inserts / Updates a TaskItem
     /// </summary>
     [HttpPut]
+    [ProducesResponseType(typeof(TaskItemResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(TaskItemResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TaskItemResponse>> UpsertTaskAsync(TaskItemUpsert request)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         var taskItem = await _taskItemService.UpsertTaskItemAsync(request);
         if (request.Id.HasValue)
         {
@@ -75,5 +87,22 @@ public class TaskItemController : ControllerBase
             new { id = taskItem!.Id },
             taskItem
         );
+    }
+    
+    /// <summary>
+    /// Deletes a TaskItem by ID
+    /// </summary>
+    
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<bool>> DeleteTaskAsync(int id)
+    {
+        var taskItem = await _taskItemService.DeleteTaskAsync(id);
+        if (!taskItem)
+        {
+            return NotFound($"Task with ID {id} not found");
+        }
+        return NoContent();
     }
 }

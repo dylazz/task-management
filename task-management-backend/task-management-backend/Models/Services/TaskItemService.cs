@@ -64,8 +64,8 @@ public class TaskItemService : ITaskItemService
             
                 // Update properties
                 taskItem.Title = dto.Title;
-                taskItem.Description = dto.Description;
-                taskItem.Priority = dto.Priority;
+                taskItem.Description = dto.Description ?? "";
+                taskItem.Priority = dto.Priority ?? Priority.Low;
                 taskItem.Status = dto.Status ?? taskItem.Status;
             }
             else
@@ -74,8 +74,8 @@ public class TaskItemService : ITaskItemService
                 taskItem = new TaskItem
                 {
                     Title = dto.Title,
-                    Description = dto.Description,
-                    Priority = dto.Priority,
+                    Description = dto.Description ?? "",
+                    Priority = dto.Priority ?? Priority.Low,
                     Status = dto.Status ?? Status.Todo,
                     CreatedDate = DateTime.UtcNow
                 };
