@@ -7,6 +7,7 @@ public interface ITaskItemService
 {
     Task<IEnumerable<TaskItemResponse>> GetAllTaskItemsAsync();
     Task<TaskItemResponse?> GetTaskItemByIdAsync(int id);
-    Task<TaskItemResponse?> UpsertTaskItemAsync(TaskItemUpsert dto);
-    Task<bool> DeleteTaskAsync(int id);
+    Task<TaskItemResponse> CreateTaskItemAsync(TaskItemCreate dto);
+    Task<TaskItemResponse?> UpdateTaskItemAsync(int id, TaskItemUpdate dto);
+    Task<bool> DeleteTaskItemAsync(int id);
 }

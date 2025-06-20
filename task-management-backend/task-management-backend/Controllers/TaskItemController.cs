@@ -13,96 +13,109 @@ namespace task_management_backend.Controllers;
 public class TaskItemController : ControllerBase
 {
     private readonly ITaskItemService _taskItemService;
-    private readonly ILogger<TaskItemController> _logger;
 
     public TaskItemController(ITaskItemService taskItemService, ILogger<TaskItemController> logger)
     {
         _taskItemService = taskItemService;
-        _logger = logger;
     }
 
     /// <summary>
-    /// Returns all TaskItems
+    /// Returns all tasks
     /// </summary>
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<TaskItemResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<IEnumerable<TaskItemResponse>>> GetAllTaskItemsAsync()
     {
-        try
-        {
-            var taskItems = await _taskItemService.GetAllTaskItemsAsync();
-            return Ok(taskItems);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error retrieving tasks");
-            return Problem("An error occurred while retrieving tasks", statusCode: StatusCodes.Status500InternalServerError);
-        }
+        var taskItems = await _taskItemService.GetAllTaskItemsAsync();
+        return Ok(taskItems);
     }
 
     /// <summary>
-    /// Returns a TaskItem by ID
+    /// Returns a task by ID
     /// </summary>
+    /// <param name="id">The ID of the task to get</param>
     [HttpGet("{id}")]
     [ActionName(nameof(GetTaskItemByIdAsync))]
     [ProducesResponseType(typeof(TaskItemResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<TaskItemResponse>> GetTaskItemByIdAsync(int id)
     {
         var taskItem = await _taskItemService.GetTaskItemByIdAsync(id);
         if (taskItem == null)
         {
-            return NotFound();
+            return NotFound($"Task with ID {id} not found");
         }
+        
         return Ok(taskItem);
     }
 
     /// <summary>
-    /// Inserts / Updates a TaskItem
+    /// Creates a new task
     /// </summary>
-    [HttpPut]
-    [ProducesResponseType(typeof(TaskItemResponse), StatusCodes.Status200OK)]
+    /// <param name="request">The task to create</param>
+    [HttpPost]
     [ProducesResponseType(typeof(TaskItemResponse), StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<TaskItemResponse>> UpsertTaskAsync(TaskItemUpsert request)
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<TaskItemResponse>> CreateTaskAsync(TaskItemCreate request)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        var taskItem = await _taskItemService.UpsertTaskItemAsync(request);
-        if (request.Id.HasValue)
-        {
-            if (taskItem == null)
-            {
-                return NotFound($"Task with ID {request.Id} not found");
-            }
-
-            return Ok(taskItem);
-        }
+        var taskItem = await _taskItemService.CreateTaskItemAsync(request);
         return CreatedAtAction(
             nameof(GetTaskItemByIdAsync),
-            new { id = taskItem!.Id },
+            new { id = taskItem.Id },
             taskItem
         );
     }
-    
+
     /// <summary>
-    /// Deletes a TaskItem by ID
+    /// Updates a task
     /// </summary>
-    
+    /// <param name="id">The ID of the task to update</param>
+    /// <param name="request">The fields to update</param>
+    [HttpPatch("{id}")]
+    [ProducesResponseType(typeof(TaskItemResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<TaskItemResponse>> UpdateTaskAsync(int id, TaskItemUpdate request)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var taskItem = await _taskItemService.UpdateTaskItemAsync(id, request);
+        if (taskItem == null)
+        {
+            return NotFound($"Task with ID {id} not found");
+        }
+
+        return Ok(taskItem);
+    }
+
+    /// <summary>
+    /// Deletes a task by ID
+    /// </summary>
+    /// <param name="id">The ID of the TaskItem to delete</param>
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<bool>> DeleteTaskAsync(int id)
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> DeleteTaskAsync(int id)
     {
-        var taskItem = await _taskItemService.DeleteTaskAsync(id);
+        var taskItem = await _taskItemService.DeleteTaskItemAsync(id);
         if (!taskItem)
         {
             return NotFound($"Task with ID {id} not found");
         }
+        
         return NoContent();
     }
 }

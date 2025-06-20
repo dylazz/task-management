@@ -3,10 +3,8 @@ using task_management_backend.Models.Enums;
 
 namespace task_management_backend.Models.DTOs.Input;
 
-public record TaskItemUpsert
+public record TaskItemCreate
 (
-    int? Id,
-    
     [Required(ErrorMessage = "Title is required")]
     [MinLength(3, ErrorMessage = "Title must be at least 3 characters long")]
     [MaxLength(100, ErrorMessage = "Title cannot exceed 100 characters")]

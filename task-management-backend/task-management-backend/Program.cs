@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using task_management_backend.Data;
 using task_management_backend.Models.Services.Interfaces;
+using task_management_backend.Models.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

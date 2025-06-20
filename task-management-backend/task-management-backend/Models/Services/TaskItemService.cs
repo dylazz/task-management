@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using task_management_backend.Data;
-using task_management_backend.Models;
 using task_management_backend.Models.DTOs.Input;
 using task_management_backend.Models.DTOs.Output;
 using task_management_backend.Models.Enums;
 using task_management_backend.Models.Services.Interfaces;
 
+namespace task_management_backend.Models.Services;
 
 public class TaskItemService : ITaskItemService
 {
@@ -17,7 +17,7 @@ public class TaskItemService : ITaskItemService
         _dbContext = dbContext;
         _logger = logger;
     }
-    
+
     public async Task<IEnumerable<TaskItemResponse>> GetAllTaskItemsAsync()
     {
         try
@@ -32,7 +32,7 @@ public class TaskItemService : ITaskItemService
             throw;
         }
     }
-    
+
     public async Task<TaskItemResponse?> GetTaskItemByIdAsync(int id)
     {
         try
@@ -42,72 +42,91 @@ public class TaskItemService : ITaskItemService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error getting task by id");
+            _logger.LogError(e, "Error getting task by ID {id}", id);
             throw;
         }
     }
 
-    public async Task<TaskItemResponse?> UpsertTaskItemAsync(TaskItemUpsert dto)
+    public async Task<TaskItemResponse> CreateTaskItemAsync(TaskItemCreate dto)
     {
         try
         {
-            TaskItem taskItem;
-        
-            if (dto.Id.HasValue)
+            var taskItem = new TaskItem
             {
-                // Update existing task
-                taskItem = await _dbContext.TaskItems.FindAsync(dto.Id.Value);
-                if (taskItem == null)
-                {
-                    return null;
-                }
-            
-                // Update properties
+                Title = dto.Title,
+                Description = dto.Description ?? string.Empty,
+                Priority = dto.Priority ?? Priority.Low,
+                Status = dto.Status ?? Status.Todo,
+                CreatedDate = DateTime.UtcNow
+            };
+
+            _dbContext.TaskItems.Add(taskItem);
+            await _dbContext.SaveChangesAsync();
+
+            return MapToResponse(taskItem);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error creating task item");
+            throw;
+        }
+    }
+
+    public async Task<TaskItemResponse?> UpdateTaskItemAsync(int id, TaskItemUpdate dto)
+    {
+        try
+        {
+            var taskItem = await _dbContext.TaskItems.FindAsync(id);
+            if (taskItem == null)
+            {
+                return null;
+            }
+
+            // Only update properties that are provided
+            if (dto.Title != null)
                 taskItem.Title = dto.Title;
-                taskItem.Description = dto.Description ?? "";
-                taskItem.Priority = dto.Priority ?? Priority.Low;
-                taskItem.Status = dto.Status ?? taskItem.Status;
-            }
-            else
-            {
-                // Create new task
-                taskItem = new TaskItem
-                {
-                    Title = dto.Title,
-                    Description = dto.Description ?? "",
-                    Priority = dto.Priority ?? Priority.Low,
-                    Status = dto.Status ?? Status.Todo,
-                    CreatedDate = DateTime.UtcNow
-                };
-                _dbContext.TaskItems.Add(taskItem);
-            }
+
+            if (dto.Description != null)
+                taskItem.Description = dto.Description;
+
+            if (dto.Priority.HasValue)
+                taskItem.Priority = dto.Priority.Value;
+
+            if (dto.Status.HasValue)
+                taskItem.Status = dto.Status.Value;
 
             await _dbContext.SaveChangesAsync();
             return MapToResponse(taskItem);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error upserting task");
+            _logger.LogError(e, "Error updating task item {Id}", id);
             throw;
         }
     }
-    
-    public async Task<bool> DeleteTaskAsync(int id)
+
+    public async Task<bool> DeleteTaskItemAsync(int id)
     {
-        var taskItem = await _dbContext.TaskItems.FindAsync(id);
-    
-        if (taskItem == null)
+        try
         {
-            return false;
+            var taskItem = await _dbContext.TaskItems.FindAsync(id);
+
+            if (taskItem == null)
+            {
+                return false;
+            }
+
+            _dbContext.TaskItems.Remove(taskItem);
+            await _dbContext.SaveChangesAsync();
+            return true;
         }
-
-        _dbContext.TaskItems.Remove(taskItem);
-        await _dbContext.SaveChangesAsync();
-    
-        return true;
-
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error deleting task item {Id}", id);
+            throw;
+        }
     }
-    
+
     private static TaskItemResponse MapToResponse(TaskItem taskItem) => new(
         taskItem.Id,
         taskItem.Title,
@@ -116,5 +135,4 @@ public class TaskItemService : ITaskItemService
         taskItem.Status,
         taskItem.CreatedDate
     );
-
 }
