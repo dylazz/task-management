@@ -5,6 +5,17 @@ using task_management_backend.Models.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost", policy =>
+    {
+        policy.WithOrigins("http://localhost:5175")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 // Add services to the container.
 builder.Services.AddControllers();
 
@@ -44,6 +55,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseCors("AllowLocalhost");
 app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();

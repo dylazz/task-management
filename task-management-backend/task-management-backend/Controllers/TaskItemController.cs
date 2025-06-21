@@ -36,13 +36,13 @@ public class TaskItemController : ControllerBase
     /// </summary>
     /// <param name="id">The ID of the task to get</param>
     [HttpGet("{id}")]
-    [ActionName(nameof(GetTaskItemByIdAsync))]
+    [ActionName(nameof(GetTaskItemAsync))]
     [ProducesResponseType(typeof(TaskItemResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<TaskItemResponse>> GetTaskItemByIdAsync(int id)
+    public async Task<ActionResult<TaskItemResponse>> GetTaskItemAsync(int id)
     {
-        var taskItem = await _taskItemService.GetTaskItemByIdAsync(id);
+        var taskItem = await _taskItemService.GetTaskItemAsync(id);
         if (taskItem == null)
         {
             return NotFound($"Task with ID {id} not found");
@@ -59,7 +59,7 @@ public class TaskItemController : ControllerBase
     [ProducesResponseType(typeof(TaskItemResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<TaskItemResponse>> CreateTaskAsync(TaskItemCreate request)
+    public async Task<ActionResult<TaskItemResponse>> CreateTaskItemAsync(TaskItemCreate request)
     {
         if (!ModelState.IsValid)
         {
@@ -68,7 +68,7 @@ public class TaskItemController : ControllerBase
 
         var taskItem = await _taskItemService.CreateTaskItemAsync(request);
         return CreatedAtAction(
-            nameof(GetTaskItemByIdAsync),
+            nameof(GetTaskItemAsync),
             new { id = taskItem.Id },
             taskItem
         );
@@ -84,7 +84,7 @@ public class TaskItemController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<TaskItemResponse>> UpdateTaskAsync(int id, TaskItemUpdate request)
+    public async Task<ActionResult<TaskItemResponse>> UpdateTaskItemAsync(int id, TaskItemUpdate request)
     {
         if (!ModelState.IsValid)
         {
@@ -108,7 +108,7 @@ public class TaskItemController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> DeleteTaskAsync(int id)
+    public async Task<IActionResult> DeleteTaskItemAsync(int id)
     {
         var taskItem = await _taskItemService.DeleteTaskItemAsync(id);
         if (!taskItem)

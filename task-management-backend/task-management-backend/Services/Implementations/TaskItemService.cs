@@ -33,7 +33,7 @@ public class TaskItemService : ITaskItemService
         }
     }
 
-    public async Task<TaskItemResponse?> GetTaskItemByIdAsync(int id)
+    public async Task<TaskItemResponse?> GetTaskItemAsync(int id)
     {
         try
         {
