@@ -15,8 +15,8 @@ export const useTaskItems = () => {
     const fetchTaskItems = async () => {
         try {
             setLoading(true);
-            const response = await taskItemService.getAllTaskItems();
-            setTaskItems(response.data);
+            const data = await taskItemService.getAllTaskItems();
+            setTaskItems(data);
             setError(null);
         } catch (err){
             setError('Failed to fetch task items');
@@ -28,8 +28,7 @@ export const useTaskItems = () => {
 
     const getTaskItem = async (id: number) => {
         try {
-            const response = await taskItemService.getTaskItem(id);
-            return response.data;
+            return await taskItemService.getTaskItem(id);
         } catch (err) {
             setError(ERROR_MESSAGES.GET_TASK_FAILED);
             throw err;
@@ -38,9 +37,9 @@ export const useTaskItems = () => {
 
     const createTaskItem = async (taskItem: Omit<TaskItem, 'id' | 'createdDate'>) => {
         try {
-            const response = await taskItemService.createTaskItem(taskItem);
-            setTaskItems(prev => [...prev, response.data]);
-            return response.data;
+            const data = await taskItemService.createTaskItem(taskItem);
+            setTaskItems(prev => [...prev, data]);
+            return data;
         } catch (err) {
             setError(ERROR_MESSAGES.CREATE_TASK_FAILED);
             throw err;
@@ -49,9 +48,9 @@ export const useTaskItems = () => {
 
     const updateTaskItem = async (taskItem: TaskItem) => {
         try {
-            const response = await taskItemService.updateTaskItem(taskItem);
-            setTaskItems(prev => prev.map(t => t.id === taskItem.id ? response.data : t));
-            return response.data;
+            const data = await taskItemService.updateTaskItem(taskItem);
+            setTaskItems(prev => prev.map(t => t.id === taskItem.id ? data : t));
+            return data;
         } catch (err) {
             setError(ERROR_MESSAGES.UPDATE_TASK_FAILED);
             throw err;
