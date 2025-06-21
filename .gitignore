@@ -5,6 +5,11 @@
 *.suo
 *.sln.docstates
 
+# Ignore SQLite files
+*.db
+*.db-shm
+*.db-wal
+
 # Rider & JetBrains
 .idea/
 
