@@ -14,8 +14,8 @@ export const useTaskItems = () => {
     const fetchTaskItems = async () => {
         try {
             setLoading(true);
-            const data = await taskItemService.getAllTaskItems();
-            setTaskItems(data);
+            const response = await taskItemService.getAllTaskItems();
+            setTaskItems(response.data);
             setError(null);
         } catch (err){
             setError('Failed to fetch task items');
@@ -27,9 +27,9 @@ export const useTaskItems = () => {
 
     const createTaskItem = async (taskItem: Omit<TaskItem, 'id' | 'createdDate'>) => {
         try {
-            const newTaskItem = await taskItemService.createTaskItem(taskItem);
-            setTaskItems(prev => [...prev, newTaskItem]);
-            return newTaskItem;
+            const response = await taskItemService.createTaskItem(taskItem);
+            setTaskItems(prev => [...prev, response.data]);
+            return response.data;
         } catch (err) {
             setError('Failed to create task item');
             throw err;
@@ -38,9 +38,9 @@ export const useTaskItems = () => {
 
     const updateTaskItem = async (taskItem: TaskItem) => {
         try {
-            const updatedTaskItem = await taskItemService.updateTaskItem(taskItem);
-            setTaskItems(prev => prev.map(t => t.id === taskItem.id ? updatedTaskItem : t));
-            return updatedTaskItem;
+            const response = await taskItemService.updateTaskItem(taskItem);
+            setTaskItems(prev => prev.map(t => t.id === taskItem.id ? response.data : t));
+            return response.data;
         } catch (err) {
             setError('Failed to update task item');
             throw err;
