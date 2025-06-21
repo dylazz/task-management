@@ -1,6 +1,7 @@
 import { Status } from '../enums/Status';
 import { Priority } from '../enums/Priority';
 import {useTaskItems} from "../hooks/useTaskItems.ts";
+import {LOADING_MESSAGES} from "../constants.ts";
 
 export const TaskItemList = () => {
   const { taskItems, loading, error } = useTaskItems();
@@ -21,7 +22,7 @@ export const TaskItemList = () => {
   };
 
   if (loading) {
-    return <div>Loading tasks...</div>;
+    return <div>{LOADING_MESSAGES.LOADING_TASKS}</div>;
   }
 
   if (error) {
