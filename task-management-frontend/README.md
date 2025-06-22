@@ -22,7 +22,7 @@ Running the frontend in Docker is ideal for production or testing environments.
 
 - Docker & Docker Compose
 - Git
-- Backend API running (on `http://localhost:8080`) see - [Backend Documentation](./task-management-backend/README.md)
+- Backend API running (on `http://localhost:8080`) see - [Backend Documentation](../task-management-backend/README.md)
 
 ---
 
@@ -56,7 +56,7 @@ For active development with hot-reloading and debugging capabilities.
 
 ### 🔧 Running Backend Locally
 
-Before starting the frontend, make sure the backend API is running locally, see - [Backend Documentation](./task-management-backend/README.md)
+Before starting the frontend, make sure the backend API is running locally, see - [Backend Documentation](../task-management-backend/README.md)
 
 ### 🔧 Setup & Run Frontend Locally
 ```bash
