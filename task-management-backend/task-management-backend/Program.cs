@@ -34,7 +34,8 @@ builder.Services.AddScoped<ITaskItemService, TaskItemService>();
 
 // Add SQLite
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite("Data Source=task-management.db"));
+    options.UseSqlite("Data Source=/app/data/task-management.db"
+        ));
 
 var app = builder.Build();
 
@@ -46,7 +47,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "DevContainer")
 {
     app.UseSwagger();
     app.UseSwaggerUI(c =>
@@ -54,6 +55,9 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Task Management API V1");
     });
 }
+
+// Health check endpoint for Rancher
+app.MapGet("/health", () => Results.Ok(new { status = "healthy" }));
 
 app.UseCors("AllowLocalhost");
 app.UseHttpsRedirection();
