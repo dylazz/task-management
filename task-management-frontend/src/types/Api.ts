@@ -1,4 +1,4 @@
-import type { TaskItem } from './TaskItem.ts';
+import type {TaskItem} from './TaskItem';
 
 // Endpoint response types
 export type GetAllTaskItemsResponse = TaskItem[];

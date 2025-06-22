@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
-import type {TaskItem} from "../types/TaskItem.ts";
-import {taskItemService} from "../services/taskItemService.ts";
-import {ERROR_MESSAGES} from "../constants.ts";
+import type {TaskItem} from "../types/TaskItem";
+import {taskItemService} from "../services/taskItemService";
+import {ERROR_MESSAGES} from "../constants";
 
 export const useTaskItems = () => {
     const [taskItems, setTaskItems] = useState<TaskItem[]>([]);
@@ -18,8 +18,8 @@ export const useTaskItems = () => {
             const data = await taskItemService.getAllTaskItems();
             setTaskItems(data);
             setError(null);
-        } catch (err){
-            setError('Failed to fetch task items');
+        } catch (err) {
+            setError(ERROR_MESSAGES.FETCH_TASKS_FAILED);
             throw err;
         } finally {
             setLoading(false);

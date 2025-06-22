@@ -1,60 +1,59 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
-import type { TaskItem } from '../types/TaskItem';
-import { useTaskItems } from '../hooks/useTaskItems';
+import {createContext, useContext, useState, useEffect, type ReactNode} from 'react';
+import type {TaskItem} from '../types/TaskItem';
+import {useTaskItems} from '../hooks/useTaskItems';
 
 //A React context that will hold task-related state and functionality.
 type TaskItemContextType = {
-  taskItems: TaskItem[];
-  loading: boolean;
-  error: string | null;
-  reorderTaskItems: (startIndex: number, endIndex: number) => void;
+    taskItems: TaskItem[];
+    loading: boolean;
+    error: string | null;
+    reorderTaskItems: (startIndex: number, endIndex: number) => void;
+    createTaskItem: (taskItem: Omit<TaskItem, 'id' | 'createdDate'>) => Promise<TaskItem>;
+    updateTaskItem: (taskItem: TaskItem) => Promise<TaskItem>;
+    deleteTaskItem: (id: number) => Promise<void>;
+    getTaskItem: (id: number) => Promise<TaskItem>;
+    fetchTaskItems: () => Promise<void>;
 }
 
 const TaskItemContext = createContext<TaskItemContextType | undefined>(undefined);
 
 // A custom hook - providing a safe way to access the context
 export const useTaskItemContext = () => {
-  const context = useContext(TaskItemContext);
-  if (context === undefined) {
-    throw new Error('useTaskItemContext must be used within a TaskItemProvider');
-  }
-  return context;
+    const context = useContext(TaskItemContext);
+    if (context === undefined) {
+        throw new Error('useTaskItemContext must be used within a TaskItemProvider');
+    }
+    return context;
 };
 
 
 type TaskItemProviderProps = {
-  children: ReactNode;
+    children: ReactNode;
 }
-export const TaskItemProvider = ({ children }: TaskItemProviderProps) => {
-  // Original data from the API (via hook)
-  const { taskItems: fetchedTaskItems, loading, error } = useTaskItems();
-  // Local state that can be modified (for reordering)
-  const [taskItems, setTaskItems] = useState<TaskItem[]>([]);
+export const TaskItemProvider = ({children}: TaskItemProviderProps) => {
+    const hookData = useTaskItems();
+    const [localTaskItems, setLocalTaskItems] = useState<TaskItem[]>([]);
 
-  // Updating the local state whenever new data is fetched
-  useEffect(() => {
-    if (fetchedTaskItems && !loading) {
-      setTaskItems([...fetchedTaskItems]);
-    }
-  }, [fetchedTaskItems, loading]);
+    useEffect(() => {
+        setLocalTaskItems(hookData.taskItems);
+    }, [hookData.taskItems]);
 
-  const reorderTaskItems = (startIndex: number, endIndex: number) => {
-    const result = Array.from(taskItems); // Creating an array from taskItems state
-    const [removed] = result.splice(startIndex, 1); // Removing item from current position
-    result.splice(endIndex, 0, removed); // Adding item to new position
-    setTaskItems(result); // Updating the local state
-  };
+    const reorderTaskItems = (startIndex: number, endIndex: number) => {
+        const result = [...localTaskItems];
+        const [removed] = result.splice(startIndex, 1);
+        result.splice(endIndex, 0, removed);
+        setLocalTaskItems(result);
+    };
 
-  const value = {
-    taskItems: taskItems,
-    loading,
-    error,
-    reorderTaskItems: reorderTaskItems,
-  };
+    const value = {
+        ...hookData,
+        taskItems: localTaskItems,
+        reorderTaskItems,
+    };
 
-  return (
-      <TaskItemContext.Provider value={value}>
-        {children}
-      </TaskItemContext.Provider>
-  );
+    return (
+        <TaskItemContext.Provider value={value}>
+            {children}
+        </TaskItemContext.Provider>
+    );
 };

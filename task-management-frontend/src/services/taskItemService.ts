@@ -1,4 +1,4 @@
-import { API_BASE_URL, ERROR_MESSAGES } from '../constants';
+import {API_BASE_URL, ERROR_MESSAGES} from '../constants';
 import type {
     GetAllTaskItemsResponse,
     GetTaskItemResponse,
@@ -10,9 +10,9 @@ import type {
 } from "../types/Api.ts";
 
 export const taskItemService = {
-    getAllTaskItems: async ():Promise<GetAllTaskItemsResponse> =>{
+    getAllTaskItems: async (): Promise<GetAllTaskItemsResponse> => {
         const response = await fetch(`${API_BASE_URL}/TaskItem`);
-        if(!response.ok) throw new Error(ERROR_MESSAGES.FETCH_TASKS_FAILED);
+        if (!response.ok) throw new Error(ERROR_MESSAGES.FETCH_TASKS_FAILED);
         return response.json();
     },
 
@@ -51,6 +51,6 @@ export const taskItemService = {
             method: 'DELETE',
         });
         if (!response.ok) throw new Error(ERROR_MESSAGES.DELETE_TASK_FAILED);
-        return response.json();
+        return null;
     },
 };

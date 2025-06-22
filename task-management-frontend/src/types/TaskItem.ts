@@ -1,5 +1,5 @@
-import type {Priority} from "../enums/Priority.ts";
-import type {Status} from "../enums/Status.ts";
+import type {Priority} from "../enums/Priority";
+import type {Status} from "../enums/Status";
 
 export interface TaskItem {
     id: number;
