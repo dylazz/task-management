@@ -1,7 +1,8 @@
-import {useState} from 'react';
+import {useMemo, useState} from 'react';
 import type {TaskItem} from '../types/TaskItem';
 import {useTaskItemContext} from '../contexts/TaskItemContext';
 import type {DragEndEvent} from '@dnd-kit/core';
+import type {Status} from "../enums/Status.ts";
 
 export const useTaskItemHandlers = () => {
     // Local state
@@ -10,6 +11,7 @@ export const useTaskItemHandlers = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [statusFilter, setStatusFilter] = useState<Status | null>(null);
 
     // Context access
     const {
@@ -117,9 +119,23 @@ export const useTaskItemHandlers = () => {
         setSubmitError(null);
     };
 
+    // Filter tasks based on the selected status
+    const filteredTaskItems = useMemo(() => {
+        if (statusFilter === null) {
+            return taskItems;
+        }
+        return taskItems.filter(task => task.status === statusFilter);
+    }, [taskItems, statusFilter]);
+
+    // Handler for status filter changes
+    const handleStatusFilterChange = (status: Status | null) => {
+        setStatusFilter(status);
+    };
+
     return {
         // State
-        taskItems,
+        taskItems: filteredTaskItems,
+        statusFilter,
         loading,
         error,
         isModalOpen,
@@ -137,6 +153,7 @@ export const useTaskItemHandlers = () => {
         handleDeleteCancelBtn,
         handleDragEnd,
         handleAddNewTaskBtn,
-        handleModalCloseBtn
+        handleModalCloseBtn,
+        handleStatusFilterChange
     };
 };

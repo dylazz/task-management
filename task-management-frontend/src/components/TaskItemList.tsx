@@ -11,7 +11,9 @@ import {SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable';
 import {SortableTaskItem} from './SortableTaskItem';
 import {TaskItemModal} from "./TaskItemModal";
 import {DeleteConfirmationModal} from "./DeleteConfirmationModal";
+import {TaskStatusFilter} from './TaskItemStatusFilter';
 import {useTaskItemHandlers} from '../hooks/useTaskItemHandlers';
+import {getStatusLabel} from "../utils/statusUtils.ts";
 
 export const TaskItemList = () => {
     const {
@@ -24,6 +26,7 @@ export const TaskItemList = () => {
         isSubmitting,
         submitError,
         isDeleteModalOpen,
+        statusFilter,
 
         // Handlers
         handleCreateSubmitBtn,
@@ -34,7 +37,8 @@ export const TaskItemList = () => {
         handleDeleteCancelBtn,
         handleDragEnd,
         handleAddNewTaskBtn,
-        handleModalCloseBtn
+        handleModalCloseBtn,
+        handleStatusFilterChange
     } = useTaskItemHandlers();
 
     // Configuring drag and drop sensors
@@ -65,16 +69,24 @@ export const TaskItemList = () => {
     return (
         <>
             {/* Main container with styling */}
-            <div className="bg-white rounded-lg shadow overflow-hidden">
+            <div className="bg-white rounded-lg shadow">
                 <div className="flex justify-between items-center p-4 border-b">
                     <h2 className="text-xl font-semibold">My Tasks</h2>
-                    {/* Add new task button */}
-                    <button
-                        onClick={handleAddNewTaskBtn}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200"
-                    >
-                        Add New Task
-                    </button>
+                    <div
+                        className="flex flex-col items-end sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
+                        <TaskStatusFilter
+                            selectedStatus={statusFilter}
+                            onStatusChange={handleStatusFilterChange}
+                        />
+
+                        {/* Add new task button */}
+                        <button
+                            onClick={handleAddNewTaskBtn}
+                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200"
+                        >
+                            Add New Task
+                        </button>
+                    </div>
                 </div>
                 {/* Drag and Drop Context Provider */}
                 <DndContext
@@ -90,8 +102,11 @@ export const TaskItemList = () => {
                         {/*If no taskItems are present*/}
                         {taskItems.length === 0 ? (
                             <div className="text-center py-8 text-gray-500">
-                                No tasks yet. Create one to get started!
+                                {statusFilter !== null
+                                    ? `No ${getStatusLabel(statusFilter)} tasks found.`
+                                    : 'No tasks yet. Create one to get started!'}
                             </div>
+
                         ) : (
                             <ul className="divide-y divide-gray-200">
                                 {/*Mapping existing taskItems into SortableTaskItem*/}
