@@ -64,17 +64,17 @@ export const TaskStatusFilter = ({ selectedStatus, onStatusChange }: TaskStatusF
           </button>
           <button
             onClick={() => {
-              onStatusChange(Status.Todo);
+              onStatusChange(Status.Incomplete);
               setIsOpen(false);
             }}
             className={`w-full text-left px-4 py-2 text-sm ${
-              selectedStatus === Status.Todo
+              selectedStatus === Status.Incomplete
                 ? 'bg-blue-100 text-blue-900'
                 : 'text-gray-700 hover:bg-gray-100'
             }`}
             role="menuitem"
           >
-            {getStatusLabel(Status.Todo)}
+            {getStatusLabel(Status.Incomplete)}
           </button>
           <button
             onClick={() => {
@@ -92,17 +92,17 @@ export const TaskStatusFilter = ({ selectedStatus, onStatusChange }: TaskStatusF
           </button>
           <button
             onClick={() => {
-              onStatusChange(Status.Done);
+              onStatusChange(Status.Complete);
               setIsOpen(false);
             }}
             className={`w-full text-left px-4 py-2 text-sm ${
-              selectedStatus === Status.Done
+              selectedStatus === Status.Complete
                 ? 'bg-blue-100 text-blue-900'
                 : 'text-gray-700 hover:bg-gray-100'
             }`}
             role="menuitem"
           >
-            {getStatusLabel(Status.Done)}
+            {getStatusLabel(Status.Complete)}
           </button>
         </div>
       )}

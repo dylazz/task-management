@@ -2,7 +2,7 @@
 
 public enum Status
 {
-    Todo,
+    Incomplete,
     InProgress,
-    Done,
+    Complete,
 }

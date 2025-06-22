@@ -56,7 +56,7 @@ public class TaskItemService : ITaskItemService
                 Title = dto.Title,
                 Description = dto.Description ?? string.Empty,
                 Priority = dto.Priority ?? Priority.Low,
-                Status = dto.Status ?? Status.Todo,
+                Status = dto.Status ?? Status.Incomplete,
                 CreatedDate = DateTime.UtcNow
             };
 

@@ -18,7 +18,7 @@ export const TaskItemModal = ({isModalOpen, onModalClose, onModalSubmit, taskIte
         title: '',
         description: '',
         priority: Priority.Low,
-        status: Status.Todo
+        status: Status.Incomplete
     });
 
     // Reset form when modal opens/closes or when task changes
@@ -30,7 +30,7 @@ export const TaskItemModal = ({isModalOpen, onModalClose, onModalSubmit, taskIte
                 title: '',
                 description: '',
                 priority: Priority.Low,
-                status: Status.Todo
+                status: Status.Incomplete
             });
         }
     }, [taskItem, isModalOpen]);
@@ -114,9 +114,9 @@ export const TaskItemModal = ({isModalOpen, onModalClose, onModalSubmit, taskIte
                             onChange={(e) => setFormData({...formData, status: Number(e.target.value) as Status})}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         >
-                            <option value={Status.Todo}>To Do</option>
+                            <option value={Status.Incomplete}>Incomplete</option>
                             <option value={Status.InProgress}>In Progress</option>
-                            <option value={Status.Done}>Done</option>
+                            <option value={Status.Complete}>Complete</option>
                         </select>
                     </div>
 
