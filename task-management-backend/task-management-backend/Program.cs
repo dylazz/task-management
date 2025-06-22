@@ -32,10 +32,33 @@ builder.Services.AddSwaggerGen(c =>
 // Register TaskItemService
 builder.Services.AddScoped<ITaskItemService, TaskItemService>();
 
-// Add SQLite
+// Environment-aware database configuration
+string dbPath;
+if (Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true" || 
+    builder.Environment.EnvironmentName == "DevContainer")
+{
+    // Container environment
+    var dataDirectory = "/app/data";
+    if (!Directory.Exists(dataDirectory))
+    {
+        Directory.CreateDirectory(dataDirectory);
+    }
+    dbPath = "Data Source=/app/data/task-management.db";
+}
+else
+{
+    // Local development environment
+    var localDataPath = Path.Combine(Directory.GetCurrentDirectory(), "data");
+    if (!Directory.Exists(localDataPath))
+    {
+        Directory.CreateDirectory(localDataPath);
+    }
+    dbPath = $"Data Source={Path.Combine(localDataPath, "task-management.db")}";
+}
+
+// Add SQLite with environment-specific path
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite("Data Source=/app/data/task-management.db"
-        ));
+    options.UseSqlite(dbPath));
 
 var app = builder.Build();
 
