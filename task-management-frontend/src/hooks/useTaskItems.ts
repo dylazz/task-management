@@ -26,15 +26,6 @@ export const useTaskItems = () => {
         }
     };
 
-    const getTaskItem = async (id: number) => {
-        try {
-            return await taskItemService.getTaskItem(id);
-        } catch (err) {
-            setError(ERROR_MESSAGES.GET_TASK_FAILED);
-            throw err;
-        }
-    };
-
     const createTaskItem = async (taskItem: Omit<TaskItem, 'id' | 'createdDate'>) => {
         try {
             const data = await taskItemService.createTaskItem(taskItem);
@@ -73,7 +64,6 @@ export const useTaskItems = () => {
         createTaskItem,
         updateTaskItem,
         deleteTaskItem,
-        getTaskItem,
         fetchTaskItems,
         taskItems,
     };

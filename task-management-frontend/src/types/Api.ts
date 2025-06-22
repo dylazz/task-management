@@ -2,7 +2,6 @@ import type {TaskItem} from './TaskItem';
 
 // Endpoint response types
 export type GetAllTaskItemsResponse = TaskItem[];
-export type GetTaskItemResponse = TaskItem;
 export type CreateTaskItemResponse = TaskItem;
 export type UpdateTaskItemResponse = TaskItem;
 export type DeleteTaskItemResponse = null;

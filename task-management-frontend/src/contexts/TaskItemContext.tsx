@@ -11,7 +11,6 @@ type TaskItemContextType = {
     createTaskItem: (taskItem: Omit<TaskItem, 'id' | 'createdDate'>) => Promise<TaskItem>;
     updateTaskItem: (taskItem: TaskItem) => Promise<TaskItem>;
     deleteTaskItem: (id: number) => Promise<void>;
-    getTaskItem: (id: number) => Promise<TaskItem>;
     fetchTaskItems: () => Promise<void>;
 }
 

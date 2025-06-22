@@ -1,7 +1,6 @@
 import {API_BASE_URL, ERROR_MESSAGES} from '../constants';
 import type {
     GetAllTaskItemsResponse,
-    GetTaskItemResponse,
     CreateTaskItemResponse,
     UpdateTaskItemResponse,
     DeleteTaskItemResponse,
@@ -12,12 +11,6 @@ import type {
 export const taskItemService = {
     getAllTaskItems: async (): Promise<GetAllTaskItemsResponse> => {
         const response = await fetch(`${API_BASE_URL}/TaskItem`);
-        if (!response.ok) throw new Error(ERROR_MESSAGES.FETCH_TASKS_FAILED);
-        return response.json();
-    },
-
-    getTaskItem: async (id: number): Promise<GetTaskItemResponse> => {
-        const response = await fetch(`${API_BASE_URL}/TaskItem/${id}`);
         if (!response.ok) throw new Error(ERROR_MESSAGES.FETCH_TASKS_FAILED);
         return response.json();
     },
