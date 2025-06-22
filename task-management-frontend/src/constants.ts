@@ -1,4 +1,4 @@
-export const API_BASE_URL = 'http://localhost:5103/api';
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5103/api';
 
 // Error Messages
 export const ERROR_MESSAGES = {
