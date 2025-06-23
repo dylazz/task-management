@@ -14,7 +14,7 @@ import {ERROR_MESSAGES} from "../constants.ts";
  * @returns Object containing task state and handler functions
  */
 
-export const useTaskItemHandlers = () => {
+export const useTaskItemOperations = () => {
     // Local state
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedTaskItem, setSelectedTaskItem] = useState<TaskItem | undefined>(undefined);

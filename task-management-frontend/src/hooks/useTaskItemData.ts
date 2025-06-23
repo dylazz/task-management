@@ -3,7 +3,7 @@ import type {TaskItem} from "../types/TaskItem";
 import {taskItemService} from "../services/taskItemService";
 import {ERROR_MESSAGES} from "../constants";
 
-export const useTaskItems = () => {
+export const useTaskItemData = () => {
     const [taskItems, setTaskItems] = useState<TaskItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);

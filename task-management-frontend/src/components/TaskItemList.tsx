@@ -13,7 +13,7 @@ import {SortableTaskItem} from './SortableTaskItem';
 import {TaskItemModal} from "./TaskItemModal";
 import {DeleteConfirmationModal} from "./DeleteConfirmationModal";
 import {TaskStatusFilter} from './TaskItemStatusFilter';
-import {useTaskItemHandlers} from '../hooks/useTaskItemHandlers';
+import {useTaskItemOperations} from '../hooks/useTaskItemOperations.ts';
 import {getStatusLabel} from "../utils/statusUtils.ts";
 
 export const TaskItemList = () => {
@@ -39,7 +39,7 @@ export const TaskItemList = () => {
         handleAddNewTaskBtn,
         handleModalCloseBtn,
         handleStatusFilterChange
-    } = useTaskItemHandlers();
+    } = useTaskItemOperations();
 
     // Configuring drag and drop sensors
     const sensors = useSensors(
