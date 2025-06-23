@@ -29,6 +29,7 @@ Running the frontend in Docker is ideal for production or testing environments.
 ### 🔧 Clone & Run (Containerised)
 
 ```bash
+# Clone the repository (If not already cloned)
 git clone https://github.com/dylazz/task-management.git
 cd task-management/task-management-frontend
 
@@ -39,7 +40,7 @@ docker network create task-management-network
 docker-compose up --build
 ```
 
-### 🌐 Access Containerized App
+### 🌐 Access Containerised App
 
 - **Frontend UI:** http://localhost:3000
 
