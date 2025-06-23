@@ -76,57 +76,6 @@ public class TaskItemControllerTests
 
     #endregion
 
-    #region GetTaskItemAsync Tests
-
-    [Fact]
-    public async Task GetTaskItemAsync_ShouldReturnOk_WhenTaskExists()
-    {
-        // Arrange - Mock service returns a task
-        var expectedTask = new TaskItemResponse(1, "Test Task", "Description", Priority.High, Status.Incomplete, DateTime.UtcNow);
-        _mockTaskItemService.Setup(s => s.GetTaskItemAsync(1))
-                           .ReturnsAsync(expectedTask);
-
-        // Act
-        var result = await _taskItemController.GetTaskItemAsync(1);
-
-        // Assert - Should return 200 OK with the task data
-        var okResult = result.Result.Should().BeOfType<OkObjectResult>().Subject;
-        var returnedTask = okResult.Value.Should().BeOfType<TaskItemResponse>().Subject;
-        returnedTask.Should().BeEquivalentTo(expectedTask);
-    }
-
-    [Theory]
-    [InlineData(0)]
-    [InlineData(-1)]
-    [InlineData(999)]
-    public async Task GetTaskItemAsync_ShouldReturnNotFound_WhenTaskDoesNotExist(int taskId)
-    {
-        // Arrange - Mock service returns null (task not found)
-        _mockTaskItemService.Setup(s => s.GetTaskItemAsync(taskId))
-                           .ReturnsAsync((TaskItemResponse?)null);
-
-        // Act
-        var result = await _taskItemController.GetTaskItemAsync(taskId);
-
-        // Assert - Should return 404 Not Found
-        result.Result.Should().BeOfType<NotFoundObjectResult>();
-        var notFoundResult = result.Result as NotFoundObjectResult;
-        notFoundResult!.Value.Should().Be($"Task with ID {taskId} not found.");
-    }
-
-    [Fact]
-    public async Task GetTaskItemAsync_ShouldThrowException_WhenServiceThrowsException()
-    {
-        // Arrange - Mock service failure (database down, network error, etc.)
-        _mockTaskItemService.Setup(s => s.GetTaskItemAsync(It.IsAny<int>()))
-                           .ThrowsAsync(new Exception("Database error"));
-
-        // Act & Assert - Controller should let exceptions bubble up and not attempt to catch / hide them
-        await Assert.ThrowsAsync<Exception>(() => _taskItemController.GetTaskItemAsync(1));
-    }
-
-    #endregion
-
     #region CreateTaskItemAsync Tests
 
     [Fact]
@@ -143,9 +92,8 @@ public class TaskItemControllerTests
         var result = await _taskItemController.CreateTaskItemAsync(createRequest);
 
         // Assert - Should return 201 Created with location header
-        var createdResult = result.Result.Should().BeOfType<CreatedAtActionResult>().Subject;
-        createdResult.ActionName.Should().Be(nameof(TaskItemController.GetTaskItemAsync));
-        createdResult.RouteValues!["id"].Should().Be(1);
+        var createdResult = result.Result.Should().BeOfType<CreatedResult>().Subject;
+        createdResult.Location.Should().Be("/api/taskitems/1");
         var returnedTask = createdResult.Value.Should().BeOfType<TaskItemResponse>().Subject;
         returnedTask.Should().BeEquivalentTo(expectedResponse);
     }

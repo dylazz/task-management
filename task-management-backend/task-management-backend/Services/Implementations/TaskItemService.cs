@@ -33,20 +33,6 @@ public class TaskItemService : ITaskItemService
         }
     }
 
-    public async Task<TaskItemResponse?> GetTaskItemAsync(int id)
-    {
-        try
-        {
-            var taskItem = await _dbContext.TaskItems.FindAsync(id);
-            return taskItem == null ? null : MapToResponse(taskItem);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error getting task by ID {id}", id);
-            throw;
-        }
-    }
-
     public async Task<TaskItemResponse> CreateTaskItemAsync(TaskItemCreate dto)
     {
         try

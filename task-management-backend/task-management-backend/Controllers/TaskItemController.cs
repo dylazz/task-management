@@ -30,28 +30,7 @@ public class TaskItemController : ControllerBase
         var taskItems = await _taskItemService.GetAllTaskItemsAsync();
         return Ok(taskItems);
     }
-
-    /// <summary>
-    /// Returns a task by ID
-    /// </summary>
-    /// <param name="id">The ID of the task to get</param>
-    /// Not used by the frontend at this stage
-    [HttpGet("{id}")]
-    [ActionName(nameof(GetTaskItemAsync))]
-    [ProducesResponseType(typeof(TaskItemResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<TaskItemResponse>> GetTaskItemAsync(int id)
-    {
-        var taskItem = await _taskItemService.GetTaskItemAsync(id);
-        if (taskItem == null)
-        {
-            return NotFound($"Task with ID {id} not found.");
-        }
-        
-        return Ok(taskItem);
-    }
-
+    
     /// <summary>
     /// Creates a new task
     /// </summary>
@@ -68,11 +47,7 @@ public class TaskItemController : ControllerBase
         }
 
         var taskItem = await _taskItemService.CreateTaskItemAsync(request);
-        return CreatedAtAction(
-            nameof(GetTaskItemAsync),
-            new { id = taskItem.Id },
-            taskItem
-        );
+        return Created($"/api/taskitems/{taskItem.Id}", taskItem);
     }
 
     /// <summary>
@@ -116,7 +91,7 @@ public class TaskItemController : ControllerBase
         {
             return NotFound($"Task with ID {id} not found.");
         }
-        
+
         return NoContent();
     }
 }
