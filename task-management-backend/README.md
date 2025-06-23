@@ -58,7 +58,7 @@ dotnet run
 ```
 
 ### 🌐 Access Local API
-- **API Base:** [http://localhost:5000](http://localhost:5000) (HTTP) / [https://localhost:5001](https://localhost:5001) (HTTPS)
+- **API Base:** [http://localhost:5000](http://localhost:5000) (HTTP)
 - **Swagger UI:** [http://localhost:5000/swagger](http://localhost:5000/swagger)
 - **Health Check:** [http://localhost:5000/health](http://localhost:5000/health)
 

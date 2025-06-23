@@ -8,6 +8,7 @@ import {
     TouchSensor
 } from '@dnd-kit/core';
 import {SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable';
+import {restrictToParentElement, restrictToVerticalAxis} from '@dnd-kit/modifiers';
 import {SortableTaskItem} from './SortableTaskItem';
 import {TaskItemModal} from "./TaskItemModal";
 import {DeleteConfirmationModal} from "./DeleteConfirmationModal";
@@ -93,6 +94,7 @@ export const TaskItemList = () => {
                     sensors={sensors} // Use configured sensors
                     collisionDetection={closestCenter} // Determine drop target
                     onDragEnd={handleDragEnd} // Handle drag completion
+                    modifiers={[restrictToVerticalAxis, restrictToParentElement]}
                 >
                     {/*Sortable Context for list management*/}
                     <SortableContext
