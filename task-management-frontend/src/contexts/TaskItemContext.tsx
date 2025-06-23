@@ -1,6 +1,7 @@
-import {createContext, useContext, useState, useEffect, type ReactNode} from 'react';
+import {createContext, useContext, type ReactNode} from 'react';
 import type {TaskItem} from '../types/TaskItem';
 import {useTaskItems} from '../hooks/useTaskItems';
+import {arrayMove} from "@dnd-kit/sortable";
 
 //A React context that will hold task-related state and functionality.
 type TaskItemContextType = {
@@ -25,28 +26,18 @@ export const useTaskItemContext = () => {
     return context;
 };
 
-
 type TaskItemProviderProps = {
     children: ReactNode;
 }
 export const TaskItemProvider = ({children}: TaskItemProviderProps) => {
     const hookData = useTaskItems();
-    const [localTaskItems, setLocalTaskItems] = useState<TaskItem[]>([]);
-
-    useEffect(() => {
-        setLocalTaskItems(hookData.taskItems);
-    }, [hookData.taskItems]);
 
     const reorderTaskItems = (startIndex: number, endIndex: number) => {
-        const result = [...localTaskItems];
-        const [removed] = result.splice(startIndex, 1);
-        result.splice(endIndex, 0, removed);
-        setLocalTaskItems(result);
+        hookData.setTaskItems(prev => arrayMove(prev, startIndex, endIndex));
     };
 
     const value = {
         ...hookData,
-        taskItems: localTaskItems,
         reorderTaskItems,
     };
 
