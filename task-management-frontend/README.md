@@ -32,7 +32,7 @@ Running the frontend in Docker is ideal for production or testing environments.
 git clone https://github.com/dylazz/task-management.git
 cd task-management/task-management-frontend
 
-# Create Docker network
+# Create Docker network (If not already created)
 docker network create task-management-network
 
 # Start the container
