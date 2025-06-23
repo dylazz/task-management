@@ -1,15 +1,23 @@
 // src/components/TaskStatusFilter.tsx
 import { useState, useRef, useEffect } from 'react';
 import { Status } from '../enums/Status';
-import { getStatusLabel } from "../utils/statusUtils";
+import {getStatusLabel, getStatusOptions} from "../utils/statusUtils";
 
 interface TaskStatusFilterProps {
   selectedStatus: Status | null;
   onStatusChange: (status: Status | null) => void;
 }
 
+/**
+ * Component for filtering tasks by status
+ *
+ * Provides a dropdown menu to filter tasks by their status (All, Incomplete,
+ * In Progress, Complete). Handles click-outside detection.
+ */
+
 export const TaskStatusFilter = ({ selectedStatus, onStatusChange }: TaskStatusFilterProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  // Reference to detect clicks outside the component
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Close the dropdown when clicking outside
@@ -26,9 +34,12 @@ export const TaskStatusFilter = ({ selectedStatus, onStatusChange }: TaskStatusF
     };
   }, []);
 
+  // Get status options from our utility function
+  const statusOptions = getStatusOptions();
+
   return (
     <div className="relative" ref={menuRef}>
-      {/* Filter button */}
+      {/* Status filter dropdown button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full sm:w-auto px-3 py-2 text-sm bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-between"
@@ -42,68 +53,31 @@ export const TaskStatusFilter = ({ selectedStatus, onStatusChange }: TaskStatusF
         </svg>
       </button>
 
-      {/* Dropdown menu */}
+      {/* Dropdown menu  */}
       {isOpen && (
         <div 
           className="absolute mt-2 py-1 w-full sm:w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200"
           role="menu"
         >
-          <button
-            onClick={() => {
-              onStatusChange(null);
-              setIsOpen(false);
-            }}
-            className={`w-full text-left px-4 py-2 text-sm ${
-              selectedStatus === null
-                ? 'bg-blue-100 text-blue-900'
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-            role="menuitem"
-          >
-            All
-          </button>
-          <button
-            onClick={() => {
-              onStatusChange(Status.Incomplete);
-              setIsOpen(false);
-            }}
-            className={`w-full text-left px-4 py-2 text-sm ${
-              selectedStatus === Status.Incomplete
-                ? 'bg-blue-100 text-blue-900'
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-            role="menuitem"
-          >
-            {getStatusLabel(Status.Incomplete)}
-          </button>
-          <button
-            onClick={() => {
-              onStatusChange(Status.InProgress);
-              setIsOpen(false);
-            }}
-            className={`w-full text-left px-4 py-2 text-sm ${
-              selectedStatus === Status.InProgress
-                ? 'bg-blue-100 text-blue-900'
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-            role="menuitem"
-          >
-            {getStatusLabel(Status.InProgress)}
-          </button>
-          <button
-            onClick={() => {
-              onStatusChange(Status.Complete);
-              setIsOpen(false);
-            }}
-            className={`w-full text-left px-4 py-2 text-sm ${
-              selectedStatus === Status.Complete
-                ? 'bg-blue-100 text-blue-900'
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-            role="menuitem"
-          >
-            {getStatusLabel(Status.Complete)}
-          </button>
+          {/* Render status options */}
+          {statusOptions.map((option) => (
+              <button
+                  key={option.label}
+                  onClick={() => {
+                    onStatusChange(option.value);
+                    setIsOpen(false);
+                  }}
+                  className={`w-full text-left px-4 py-2 text-sm ${
+                      selectedStatus === option.value
+                          ? 'bg-blue-100 text-blue-900'
+                          : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                  role="option"
+                  aria-selected={selectedStatus === option.value}
+              >
+                {option.label}
+              </button>
+          ))}
         </div>
       )}
     </div>

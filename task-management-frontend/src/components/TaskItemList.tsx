@@ -35,7 +35,6 @@ export const TaskItemList = () => {
         handleTaskItemEditBtn,
         handleTaskItemDeleteBtn,
         handleDeleteConfirmBtn,
-        handleDeleteCancelBtn,
         handleDragEnd,
         handleAddNewTaskBtn,
         handleModalCloseBtn,
@@ -142,12 +141,12 @@ export const TaskItemList = () => {
             />
             {selectedTaskItem && (
                 <DeleteConfirmationModal
-                    isOpen={isDeleteModalOpen}
-                    taskItem={selectedTaskItem!}
+                    isModalOpen={isDeleteModalOpen}
+                    taskItem={selectedTaskItem}
                     isSubmitting={isSubmitting}
                     submitError={submitError}
-                    onConfirm={handleDeleteConfirmBtn}
-                    onCancel={handleDeleteCancelBtn}
+                    onModalConfirm={handleDeleteConfirmBtn}
+                    onModalCancel={handleModalCloseBtn}
                 />
             )}
         </>

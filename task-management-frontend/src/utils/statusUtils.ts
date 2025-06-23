@@ -1,5 +1,8 @@
 import { Status } from '../enums/Status';
 
+/**
+ * Returns a label for a status value
+ */
 export const getStatusLabel = (status: Status): string => {
     switch (status) {
         case Status.Incomplete:
@@ -11,6 +14,9 @@ export const getStatusLabel = (status: Status): string => {
     }
 };
 
+/**
+ * Returns CSS classes for styling
+ */
 export const getStatusClass = (status: Status): string => {
     switch (status) {
         case Status.Incomplete:
@@ -21,3 +27,13 @@ export const getStatusClass = (status: Status): string => {
             return 'bg-green-100 text-green-800';
     }
 };
+
+/**
+ * Status options for filter dropdowns
+ */
+export const getStatusOptions = () => [
+    { value: null, label: 'All' },
+    { value: Status.Incomplete, label: getStatusLabel(Status.Incomplete) },
+    { value: Status.InProgress, label: getStatusLabel(Status.InProgress) },
+    { value: Status.Complete, label: getStatusLabel(Status.Complete) }
+];

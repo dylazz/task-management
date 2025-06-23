@@ -3,6 +3,8 @@ import {type TaskItem} from '../types/TaskItem';
 import {Priority} from '../enums/Priority';
 import {Status} from '../enums/Status';
 import * as React from "react";
+import {getStatusLabel} from "../utils/statusUtils.ts";
+import {getPriorityLabel} from "../utils/priorityUtils.ts";
 
 interface TaskItemModalProps {
     isModalOpen: boolean;
@@ -43,8 +45,10 @@ export const TaskItemModal = ({isModalOpen, onModalClose, onModalSubmit, taskIte
     if (!isModalOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-            <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
+             onClick={onModalClose}>
+            <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white"
+                 onClick={e => e.stopPropagation()}>
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-medium">
                         {taskItem ? 'Edit Task' : 'Create New Task'}
@@ -98,9 +102,9 @@ export const TaskItemModal = ({isModalOpen, onModalClose, onModalSubmit, taskIte
                             onChange={(e) => setFormData({...formData, priority: Number(e.target.value) as Priority})}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         >
-                            <option value={Priority.Low}>Low</option>
-                            <option value={Priority.Medium}>Medium</option>
-                            <option value={Priority.High}>High</option>
+                            <option value={Priority.Low}>{getPriorityLabel(Priority.Low)}</option>
+                            <option value={Priority.Medium}>{getPriorityLabel(Priority.Medium)}</option>
+                            <option value={Priority.High}>{getPriorityLabel(Priority.High)}</option>
                         </select>
                     </div>
 
@@ -114,9 +118,9 @@ export const TaskItemModal = ({isModalOpen, onModalClose, onModalSubmit, taskIte
                             onChange={(e) => setFormData({...formData, status: Number(e.target.value) as Status})}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         >
-                            <option value={Status.Incomplete}>Incomplete</option>
-                            <option value={Status.InProgress}>In Progress</option>
-                            <option value={Status.Complete}>Complete</option>
+                            <option value={Status.Incomplete}>{getStatusLabel(Status.Incomplete)}</option>
+                            <option value={Status.InProgress}>{getStatusLabel(Status.InProgress)}</option>
+                            <option value={Status.Complete}>{getStatusLabel(Status.Complete)}</option>
                         </select>
                     </div>
 

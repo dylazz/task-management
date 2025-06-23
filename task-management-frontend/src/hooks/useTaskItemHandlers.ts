@@ -3,6 +3,16 @@ import type {TaskItem} from '../types/TaskItem';
 import {useTaskItemContext} from '../contexts/TaskItemContext';
 import type {DragEndEvent} from '@dnd-kit/core';
 import type {Status} from "../enums/Status.ts";
+import {ERROR_MESSAGES} from "../constants.ts";
+
+/**
+ * Custom hook to manage task item operations and state
+ *
+ * Provides state and handlers for task operations like create, update, delete,
+ * reordering via drag-and-drop, and filtering by status.
+ *
+ * @returns Object containing task state and handler functions
+ */
 
 export const useTaskItemHandlers = () => {
     // Local state
@@ -24,7 +34,10 @@ export const useTaskItemHandlers = () => {
         deleteTaskItem
     } = useTaskItemContext();
 
-    // Handling submission of creating a new task
+    /**
+     * Handles the creation of a new task
+     * @param taskItemData - Data for the new task
+     */
     const handleCreateSubmitBtn = async (taskItemData: Partial<TaskItem>) => {
         setIsSubmitting(true);
         setSubmitError(null);
@@ -35,13 +48,16 @@ export const useTaskItemHandlers = () => {
             await createTaskItem(createData);
             setIsModalOpen(false);
         } catch (error) {
-            setSubmitError(error instanceof Error ? error.message : 'Failed to create task');
+            setSubmitError(error instanceof Error ? error.message : ERROR_MESSAGES.CREATE_TASK_FAILED);
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    // Handling submission of editing an existing task
+    /**
+     * Handles the update of an existing task
+     * @param taskItemData - Updated data for the task
+     */
     const handleEditSubmitBtn = async (taskItemData: Partial<TaskItem>) => {
         setIsSubmitting(true);
         setSubmitError(null);
@@ -52,25 +68,35 @@ export const useTaskItemHandlers = () => {
                 setSelectedTaskItem(undefined);
             }
         } catch (error) {
-            setSubmitError(error instanceof Error ? error.message : 'Failed to update task');
+            setSubmitError(error instanceof Error ? error.message : ERROR_MESSAGES.UPDATE_TASK_FAILED);
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    // Handling clicking on edit button
-    const handleTaskItemEditBtn = (task: TaskItem) => {
-        setSelectedTaskItem(task);
+    /**
+     * Opens the edit modal for a selected task
+     * @param taskItem - The task to edit
+     */
+    const handleTaskItemEditBtn = (taskItem: TaskItem) => {
+        setSelectedTaskItem(taskItem);
         setSubmitError(null);
         setIsModalOpen(true);
     };
 
-    const handleTaskItemDeleteBtn = (task: TaskItem) => {
-        setSelectedTaskItem(task);
+    /**
+     * Opens the delete confirmation modal for a selected taskItem
+     * @param taskItem - The taskItem to delete
+     */
+    const handleTaskItemDeleteBtn = (taskItem: TaskItem) => {
+        setSelectedTaskItem(taskItem);
         setSubmitError(null);
         setIsDeleteModalOpen(true);
     };
 
+    /**
+     * Confirms and executes task deletion
+     */
     const handleDeleteConfirmBtn = async () => {
         if (!selectedTaskItem) {
             return;
@@ -82,19 +108,16 @@ export const useTaskItemHandlers = () => {
             setIsDeleteModalOpen(false);
             setSelectedTaskItem(undefined);
         } catch (error) {
-            setSubmitError(error instanceof Error ? error.message : 'Failed to delete task');
+            setSubmitError(error instanceof Error ? error.message : ERROR_MESSAGES.DELETE_TASK_FAILED);
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    const handleDeleteCancelBtn = () => {
-        setIsDeleteModalOpen(false);
-        setSelectedTaskItem(undefined);
-        setSubmitError(null);
-    };
-
-    // Handling drag and drop reordering
+    /**
+     * Handles task reordering after drag and drop
+     * @param event - Drag end event containing source and destination info
+     */
     const handleDragEnd = (event: DragEndEvent) => {
         const {active, over} = event;
 
@@ -105,21 +128,28 @@ export const useTaskItemHandlers = () => {
         }
     };
 
-    // Handler for Add New Task button
+    /**
+     * Opens the task creation modal
+     */
     const handleAddNewTaskBtn = () => {
         setSelectedTaskItem(undefined);
         setSubmitError(null);
         setIsModalOpen(true);
     };
 
-    // Handler for modal close
+    /**
+     * Closes the task modal (create/edit/delete)
+     */
     const handleModalCloseBtn = () => {
         setIsModalOpen(false);
         setSelectedTaskItem(undefined);
         setSubmitError(null);
     };
 
-    // Filter tasks based on the selected status
+    /**
+     * Filters tasks based on selected status
+     * Memoized to prevent unnecessary recalculation
+     */
     const filteredTaskItems = useMemo(() => {
         if (statusFilter === null) {
             return taskItems;
@@ -127,7 +157,10 @@ export const useTaskItemHandlers = () => {
         return taskItems.filter(task => task.status === statusFilter);
     }, [taskItems, statusFilter]);
 
-    // Handler for status filter changes
+    /**
+     * Updates the status filter
+     * @param status - The status to filter by, or null for all tasks
+     */
     const handleStatusFilterChange = (status: Status | null) => {
         setStatusFilter(status);
     };
@@ -150,7 +183,6 @@ export const useTaskItemHandlers = () => {
         handleTaskItemEditBtn,
         handleTaskItemDeleteBtn,
         handleDeleteConfirmBtn,
-        handleDeleteCancelBtn,
         handleDragEnd,
         handleAddNewTaskBtn,
         handleModalCloseBtn,

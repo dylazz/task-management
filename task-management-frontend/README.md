@@ -65,3 +65,7 @@ cd task-management/task-management-frontend
 npm install
 npm run dev
 ```
+
+### 🌐 Access Local Development App
+
+- **Frontend UI:** http://localhost:5173/
