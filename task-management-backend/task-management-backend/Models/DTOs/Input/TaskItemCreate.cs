@@ -6,7 +6,6 @@ namespace task_management_backend.Models.DTOs.Input;
 public record TaskItemCreate
 (
     [Required(ErrorMessage = "Title is required")]
-    [MinLength(3, ErrorMessage = "Title must be at least 3 characters long")]
     [MaxLength(100, ErrorMessage = "Title cannot exceed 100 characters")]
     string Title,
     
