@@ -35,6 +35,7 @@ public class TaskItemController : ControllerBase
     /// Returns a task by ID
     /// </summary>
     /// <param name="id">The ID of the task to get</param>
+    /// Not used by the frontend at this stage
     [HttpGet("{id}")]
     [ActionName(nameof(GetTaskItemAsync))]
     [ProducesResponseType(typeof(TaskItemResponse), StatusCodes.Status200OK)]
@@ -45,7 +46,7 @@ public class TaskItemController : ControllerBase
         var taskItem = await _taskItemService.GetTaskItemAsync(id);
         if (taskItem == null)
         {
-            return NotFound($"Task with ID {id} not found");
+            return NotFound($"Task with ID {id} not found.");
         }
         
         return Ok(taskItem);
@@ -94,7 +95,7 @@ public class TaskItemController : ControllerBase
         var taskItem = await _taskItemService.UpdateTaskItemAsync(id, request);
         if (taskItem == null)
         {
-            return NotFound($"Task with ID {id} not found");
+            return NotFound($"Task with ID {id} not found.");
         }
 
         return Ok(taskItem);
@@ -113,7 +114,7 @@ public class TaskItemController : ControllerBase
         var taskItem = await _taskItemService.DeleteTaskItemAsync(id);
         if (!taskItem)
         {
-            return NotFound($"Task with ID {id} not found");
+            return NotFound($"Task with ID {id} not found.");
         }
         
         return NoContent();
