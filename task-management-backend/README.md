@@ -52,7 +52,7 @@ For active development with hot-reloading, debugging, and IntelliSense support.
 ### 🔧 Setup & Run Backend Locally
 ```bash
 git clone https://github.com/dylazz/task-management.git
-cd task-management/task-management-backend
+cd task-management/task-management-backend/task-management-backend
 dotnet restore
 dotnet run
 ```
